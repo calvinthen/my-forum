@@ -1,11 +1,17 @@
 import React from 'react'
+import './MainContent.css' // import the custom css file
 
-const MainContent = () => {
+export default function MainContent ({ children }){
   return (
-    <div>
-      <div className="p-8">Main Content Area</div>
-    </div>
+    <main className="main-content">
+      <div className="content-wrapper">
+        <h2>Welcome to My Forum</h2>
+
+        <p>
+          {children}
+        </p>
+      </div>
+    </main>
   )
 }
 
-export default MainContent

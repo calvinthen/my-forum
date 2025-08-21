@@ -1,0 +1,54 @@
+.header {
+  background-color: #1e1e1e; /* Dark background */
+  color: white;
+  height: 64px; /* same as h-16 in Tailwind */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.header-container {
+  max-width: 1280px; /* same as max-w-7xl */
+  margin: 0 auto;
+  padding: 0 16px; /* px-4 */
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.25rem; /* text-xl */
+  font-weight: bold;
+}
+
+.logo a {
+  color: white;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 24px;
+}
+
+nav a {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+}
+
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #00bcd4; /* teal hover */
+}
+
+.logo-header {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}

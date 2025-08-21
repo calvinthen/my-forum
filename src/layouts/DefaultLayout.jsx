@@ -1,12 +1,20 @@
 import React from 'react'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
+import MainContent from '../components/MainContent'
 
 export default function DefaultLayout({ children }) {
   return (
-     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white transition-colors">
+    <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow">{children}</main>
+
+      {/* Full background content */}
+      <main className="flex-grow">
+        <MainContent>
+          {children}   {/* inject children here */}
+        </MainContent>
+      </main>
+
       <Footer />
     </div>
   );

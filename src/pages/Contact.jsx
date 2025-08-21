@@ -2,14 +2,14 @@ import React from 'react'
 import DefaultLayout from '../layouts/DefaultLayout'
 import MainContent from '../components/MainContent'
 
-const About = () => {
+const Contact = () => {
   return (
     <div>
-    <DefaultLayout>
-      <h1 className="text-3xl font-bold p-4">About</h1>
-    </DefaultLayout>
+      <DefaultLayout>
+        <h1 className="text-3xl font-bold p-4">Contact</h1>
+      </DefaultLayout>
     </div>
   )
 }
 
-export default About 
+export default Contact
