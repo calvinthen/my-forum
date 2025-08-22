@@ -5,10 +5,31 @@ import './Home.css' // custom styles
 const Home = () => {
   const [text, setText] = useState("")
   const [submitted, setSubmitted] = useState("")
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = () => {
-    setSubmitted(text)
-    setText("")
+  const handleSubmit = async () => {
+    if (!text.trim()) return
+
+    setLoading(true)
+    try {
+      // fetch to backend API (example: http://localhost:5000/posts-status)
+      const res = await fetch("http://localhost:5000/posts-status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: text }),
+      })
+
+      if (!res.ok) throw new Error("Failed to save post")
+
+      const data = await res.json()
+      setSubmitted(data.content) // server response
+      setText("")
+    } catch (err) {
+      console.error(err)
+      alert("Error saving post")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -24,8 +45,8 @@ const Home = () => {
             placeholder="What is on your mind?"
             className="text-input"
           />
-          <button onClick={handleSubmit} className="submit-btn">
-            Post
+          <button onClick={handleSubmit} className="submit-btn" disabled={loading}>
+            {loading ? "Posting..." : "Post"}
           </button>
         </div>
 
