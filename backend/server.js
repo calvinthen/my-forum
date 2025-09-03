@@ -16,35 +16,11 @@ const db = new sqlite3.Database("./mydb.sqlite", (err) => {
 });
 
 // create table if not exists
-db.run(`CREATE TABLE IF NOT EXISTS posts (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  content TEXT
-)`);
-
-// create table if not exists
 db.run(`CREATE TABLE IF NOT EXISTS posts_status (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   content TEXT
 )`);
 
-// Get all posts
-app.get("/posts", (req, res) => {
-  db.all("SELECT * FROM posts", [], (err, rows) => {
-    if (err) res.status(400).json({ error: err.message });
-    else res.json(rows);
-  });
-});
-
-// Add a post
-app.post("/posts", (req, res) => {
-  const { content } = req.body;
-  if (!content) return res.status(400).json({ error: "Content required" });
-
-  db.run(`INSERT INTO posts (content) VALUES (?)`, [content], function (err) {
-    if (err) res.status(400).json({ error: err.message });
-    else res.json({ id: this.lastID, content });
-  });
-});
 
 // Add a post status
 app.post("/posts-status", (req, res) => {
