@@ -1,11 +1,29 @@
-import React, { useState } from 'react'
+import React, { useState , useEffect} from 'react'
 import DefaultLayout from '../layouts/DefaultLayout'
 import './Home.css' // custom styles
 
 const Home = () => {
   const [text, setText] = useState("")
-  const [submitted, setSubmitted] = useState("")
+  const [posts, setPosts] = useState([])   // store all posts
   const [loading, setLoading] = useState(false)
+
+  // 🔹 Fetch all posts when page loads
+  useEffect(() => {
+    fetchPosts()
+  }, [])
+
+  const fetchPosts = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/posts-status")
+      if (!res.ok) throw new Error("Failed to fetch posts")
+      const data = await res.json()
+      setPosts(data) // save posts from server
+    } catch (err) {
+      console.error(err)
+      alert("Error loading posts")
+    }
+  }
+
 
   const handleSubmit = async () => {
     if (!text.trim()) return
@@ -50,11 +68,19 @@ const Home = () => {
           </button>
         </div>
 
-        {submitted && (
-          <p className="submitted-text">
-            You wrote: <strong>{submitted}</strong>
-          </p>
-        )}
+        {/* 🔹 Show all posts */}
+        <div className="posts-list">
+          {posts.length === 0 ? (
+            <p>No posts yet.</p>
+          ) : (
+            posts.map((post) => (
+              <div key={post.id} className="post-item">
+                {post.content}
+              </div>
+            ))
+          )}
+        </div>
+
       </div>
     </DefaultLayout>
   )

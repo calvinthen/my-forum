@@ -33,14 +33,23 @@ app.post("/posts-status", (req, res) => {
   });
 });
 
-
-// Get all posts
-app.get("/show-status", (req, res) => {
-  db.all("SELECT * FROM posts_status", [], (err, rows) => {
-    if (err) res.status(400).json({ error: err.message });
-    else res.json(rows);
+// ✅ Get all posts
+app.get("/posts-status", (req, res) => {
+  db.all("SELECT * FROM posts_status ORDER BY id ASC", [], (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(rows);
   });
 });
+
+// ✅ Delete a post (optional)
+app.delete("/posts-status/:id", (req, res) => {
+  const { id } = req.params;
+  db.run(`DELETE FROM posts_status WHERE id = ?`, id, function (err) {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ deleted: this.changes });
+  });
+});
+
 
 // Start server
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
