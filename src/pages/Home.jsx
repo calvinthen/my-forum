@@ -75,7 +75,8 @@ const Home = () => {
           ) : (
             posts.map((post) => (
               <div key={post.id} className="post-item">
-                {post.content}
+                ID = {post.id} - Said : 
+                 {post.content}
               </div>
             ))
           )}
