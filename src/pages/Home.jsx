@@ -40,7 +40,7 @@ const Home = () => {
       if (!res.ok) throw new Error("Failed to save post")
 
       const data = await res.json()
-      setSubmitted(data.content) // server response
+      setPosts([data, ...posts])// server response
       setText("")
     } catch (err) {
       console.error(err)
@@ -75,8 +75,7 @@ const Home = () => {
           ) : (
             posts.map((post) => (
               <div key={post.id} className="post-item">
-                ID = {post.id} - Said : 
-                 {post.content}
+                ID = {post.id} - Said: {post.content}
               </div>
             ))
           )}

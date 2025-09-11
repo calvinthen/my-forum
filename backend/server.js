@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const sqlite3 = require("sqlite3").verbose();
+const bcrypt = require("bcrypt"); // ✅ add bcrypt for hashing
 
 const app = express();
 const PORT = 5000;
@@ -19,6 +20,12 @@ const db = new sqlite3.Database("./mydb.sqlite", (err) => {
 db.run(`CREATE TABLE IF NOT EXISTS posts_status (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   content TEXT
+)`);
+
+db.run(`CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT UNIQUE,
+  password TEXT
 )`);
 
 
@@ -48,6 +55,31 @@ app.delete("/posts-status/:id", (req, res) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json({ deleted: this.changes });
   });
+});
+
+// ✅ Register new user
+app.post("/register", async (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password)
+    return res.status(400).json({ error: "Username and password required" });
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    db.run(
+      `INSERT INTO users (username, password) VALUES (?, ?)`,
+      [username, hashedPassword],
+      function (err) {
+        if (err) {
+          if (err.message.includes("UNIQUE"))
+            return res.status(400).json({ error: "Username already taken" });
+          return res.status(500).json({ error: err.message });
+        }
+        res.json({ id: this.lastID, username });
+      }
+    );
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
 
