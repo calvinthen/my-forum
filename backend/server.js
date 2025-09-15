@@ -82,6 +82,27 @@ app.post("/register", async (req, res) => {
   }
 });
 
+// ✅ Login user
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password)
+    return res.status(400).json({ error: "Username and password required" });
+
+  db.get(`SELECT * FROM users WHERE username = ?`, [username], async (err, user) => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (!user) return res.status(400).json({ error: "Invalid username or password" });
+
+    try {
+      const match = await bcrypt.compare(password, user.password);
+      if (!match) return res.status(400).json({ error: "Invalid username or password" });
+
+      res.json({ message: "Login successful", username: user.username });
+    } catch (err) {
+      res.status(500).json({ error: "Server error" });
+    }
+  });
+});
+
 
 // Start server
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
