@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";  // ✅ import navigate
 import DefaultLayout from "../layouts/DefaultLayout";
 import "./Login.css"; // create this for styles
 
@@ -6,28 +7,30 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const navigate = useNavigate(); // ✅ initialize navigate
 
   const handleLogin = async (e) => {
-  e.preventDefault();
-  try {
-    const res = await fetch("http://localhost:5000/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    });
+    e.preventDefault();
+    try {
+      const res = await fetch("http://localhost:5000/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
 
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Login failed");
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Login failed");
 
-    // ✅ Save user info in localStorage
-    localStorage.setItem("user", JSON.stringify({ username: data.username }));
+      // ✅ Save user info in localStorage
+      localStorage.setItem("user", JSON.stringify({ username: data.username }));
 
-    // ✅ Use data.username, not data.user.username
-    setMessage(`✅ Welcome ${data.username}!`);
-  } catch (err) {
-    setMessage(`❌ ${err.message}`);
-  }
-};
+      // ✅ Redirect to home after login
+      navigate("/");
+
+    } catch (err) {
+      setMessage(`❌ ${err.message}`);
+    }
+  };
 
   return (
     <DefaultLayout hideWelcome>
