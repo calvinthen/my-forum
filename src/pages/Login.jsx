@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";  // ✅ import navigate
+import { useNavigate } from "react-router-dom";
 import DefaultLayout from "../layouts/DefaultLayout";
-import "./Login.css"; // create this for styles
+import "./Login.css";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const navigate = useNavigate(); // ✅ initialize navigate
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -21,12 +21,8 @@ const Login = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Login failed");
 
-      // ✅ Save user info in localStorage
       localStorage.setItem("user", JSON.stringify({ username: data.username }));
-
-      // ✅ Redirect to home after login
-      navigate("/");
-
+      navigate("/"); // redirect home
     } catch (err) {
       setMessage(`❌ ${err.message}`);
     }
@@ -35,8 +31,8 @@ const Login = () => {
   return (
     <DefaultLayout hideWelcome>
       <div className="login-wrapper">
-        <h2>Login</h2>
         <form onSubmit={handleLogin} className="login-form">
+          <h2 className="login-title">Login</h2> {/* 🔹 moved inside card */}
           <input
             type="text"
             placeholder="Username"
@@ -52,8 +48,8 @@ const Login = () => {
             required
           />
           <button type="submit">Login</button>
+          {message && <p className="login-message">{message}</p>}
         </form>
-        {message && <p className="login-message">{message}</p>}
       </div>
     </DefaultLayout>
   );

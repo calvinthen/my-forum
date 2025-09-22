@@ -1,35 +1,78 @@
 .login-wrapper {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  margin-top: 50px;
+  min-height: 70vh;
+  padding: 2rem;
 }
 
 .login-form {
+  background: #1e1e2f; /* same dark card */
+  padding: 2rem;
+  border-radius: 12px; /* match register */
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  width: 300px;
+  gap: 1rem;
+  width: 100%;
+  max-width: 350px;
 }
 
-.login-form input,
-.login-form button {
-  padding: 10px;
-  font-size: 16px;
+.login-title {
+  margin-bottom: 1rem;
+  font-size: 2rem; /* same as register */
+  font-weight: bold;
+  color: #f5f5f5;
+  text-align: center;
 }
 
-.login-form button {
-  background: #1e1e2f;
-  color: #e4e4e7;
+.login-form input {
+  padding: 0.8rem; /* match register */
+  font-size: 1rem;
   border: none;
+  border-radius: 8px; /* match register */
+  background-color: #2a2a3d;
+  color: #fff;
+  transition: 0.2s;
+}
+
+.login-form input::placeholder {
+  color: #aaa;
+}
+
+.login-form input:focus {
+  outline: none;
+  background-color: #33334d;
+  border: 1px solid #5a5af0; /* match register focus */
+}
+
+.login-form button {
+  padding: 0.9rem;
+  font-size: 1rem;
+  font-weight: bold;
+  background: #5a5af0; /* same purple as register */
+  color: #fff;
+  border: none;
+  border-radius: 8px; /* match register */
   cursor: pointer;
+  transition: background 0.3s;
 }
 
 .login-form button:hover {
-  background: #33334d;
+  background: #4646d8;
 }
 
 .login-message {
-  margin-top: 15px;
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
   font-weight: bold;
+}
+
+.login-message.success {
+  color: #4caf50;
+}
+
+.login-message.error {
+  color: #f44336;
 }

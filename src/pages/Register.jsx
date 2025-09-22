@@ -3,7 +3,6 @@ import DefaultLayout from "../layouts/DefaultLayout";
 import "./Register.css";
 
 const Register = () => {
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -11,6 +10,12 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     setMessage("");
+
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    if (!passwordRegex.test(password)) {
+      setMessage("❌ Password must be at least 6 characters long and include both letters and numbers.");
+      return;
+    }
 
     try {
       const res = await fetch("http://localhost:5000/register", {
@@ -34,8 +39,8 @@ const Register = () => {
   return (
     <DefaultLayout hideWelcome={true}>
       <div className="register-wrapper">
-        <h2 className="register-title">Create Account</h2>
         <form className="register-form" onSubmit={handleRegister}>
+          <h2 className="register-title">Create Account</h2>  {/* 🔹 moved inside */}
           <input
             type="text"
             value={username}
@@ -51,14 +56,11 @@ const Register = () => {
             required
           />
           <button type="submit">Register</button>
+          {message && <p className="register-message">{message}</p>}
         </form>
-        {message && <p className="register-message">{message}</p>}
       </div>
     </DefaultLayout>
   );
-
-
-
 };
 
 export default Register;

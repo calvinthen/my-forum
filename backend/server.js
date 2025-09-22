@@ -28,7 +28,6 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
   password TEXT
 )`);
 
-
 // Add a post status
 app.post("/posts-status", (req, res) => {
   const { content } = req.body;
@@ -57,11 +56,19 @@ app.delete("/posts-status/:id", (req, res) => {
   });
 });
 
-// ✅ Register new user
+// ✅ Register new user with password validation
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password)
     return res.status(400).json({ error: "Username and password required" });
+
+  // ✅ Password must be at least 6 chars, include letters and numbers
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+  if (!passwordRegex.test(password)) {
+    return res.status(400).json({
+      error: "Password must be at least 6 characters long and include both letters and numbers.",
+    });
+  }
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -102,7 +109,6 @@ app.post("/login", (req, res) => {
     }
   });
 });
-
 
 // Start server
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
