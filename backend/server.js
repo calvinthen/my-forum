@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const sqlite3 = require("sqlite3").verbose();
-const bcrypt = require("bcrypt"); // ✅ add bcrypt for hashing
+const bcrypt = require("bcrypt");
 
 const app = express();
 const PORT = 5000;
@@ -16,7 +16,7 @@ const db = new sqlite3.Database("./mydb.sqlite", (err) => {
   else console.log("✅ Connected to SQLite database.");
 });
 
-// create table if not exists
+// create tables if not exists
 db.run(`CREATE TABLE IF NOT EXISTS posts_status (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   content TEXT
@@ -25,7 +25,8 @@ db.run(`CREATE TABLE IF NOT EXISTS posts_status (
 db.run(`CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT UNIQUE,
-  password TEXT
+  password TEXT,
+  photo TEXT DEFAULT 'https://cdn.shopify.com/s/files/1/0747/5317/9944/files/furina_901c3b85-7c17-44c9-bcea-a7e434d864b5_600x600.jpg?v=1718073582'
 )`);
 
 // Add a post status
@@ -47,7 +48,7 @@ app.get("/posts-status", (req, res) => {
   });
 });
 
-// ✅ Delete a post (optional)
+// ✅ Delete a post
 app.delete("/posts-status/:id", (req, res) => {
   const { id } = req.params;
   db.run(`DELETE FROM posts_status WHERE id = ?`, id, function (err) {
@@ -62,7 +63,7 @@ app.post("/register", async (req, res) => {
   if (!username || !password)
     return res.status(400).json({ error: "Username and password required" });
 
-  // ✅ Password must be at least 6 chars, include letters and numbers
+  // Password must be at least 6 chars, include letters and numbers
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
   if (!passwordRegex.test(password)) {
     return res.status(400).json({
@@ -84,7 +85,7 @@ app.post("/register", async (req, res) => {
         res.json({ id: this.lastID, username });
       }
     );
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: "Server error" });
   }
 });
@@ -103,8 +104,8 @@ app.post("/login", (req, res) => {
       const match = await bcrypt.compare(password, user.password);
       if (!match) return res.status(400).json({ error: "Invalid username or password" });
 
-      res.json({ message: "Login successful", username: user.username });
-    } catch (err) {
+      res.json({ message: "Login successful", username: user.username, photo: user.photo });
+    } catch {
       res.status(500).json({ error: "Server error" });
     }
   });

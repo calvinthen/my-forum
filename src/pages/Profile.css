@@ -1,0 +1,12 @@
+.profile-wrapper {
+  text-align: center;
+  padding: 2rem;
+}
+
+.profile-photo {
+  width: 200px;
+  height: 200px;
+  border-radius: 12px; /* rounded edges */
+  object-fit: cover;   /* make sure photo scales nicely */
+  margin-top: 1rem;
+}

@@ -1,13 +1,17 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import DefaultLayout from "../layouts/DefaultLayout";
 import "./Login.css";
+
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+  const successMessage = location.state?.successMessage || "";
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -21,7 +25,12 @@ const Login = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Login failed");
 
-      localStorage.setItem("user", JSON.stringify({ username: data.username }));
+      // inside handleLogin success
+      localStorage.setItem("user", JSON.stringify({ 
+        username: data.username, 
+        photo: data.photo   // ✅ save photo
+      }));
+      
       navigate("/"); // redirect home
     } catch (err) {
       setMessage(`❌ ${err.message}`);
@@ -48,7 +57,10 @@ const Login = () => {
             required
           />
           <button type="submit">Login</button>
-          {message && <p className="login-message">{message}</p>}
+          
+          {successMessage && <p className="login-message success">{successMessage}</p>}
+          {message && <p className="login-message error">{message}</p>}
+
         </form>
       </div>
     </DefaultLayout>

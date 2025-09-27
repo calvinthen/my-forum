@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import DefaultLayout from "../layouts/DefaultLayout";
+import { useNavigate } from "react-router-dom";
 import "./Register.css";
 
 const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -13,7 +15,9 @@ const Register = () => {
 
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
     if (!passwordRegex.test(password)) {
-      setMessage("❌ Password must be at least 6 characters long and include both letters and numbers.");
+      setMessage(
+        "❌ Password must be at least 6 characters long and include both letters and numbers."
+      );
       return;
     }
 
@@ -27,9 +31,17 @@ const Register = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to register");
 
-      setMessage("✅ Registered successfully! You can now login.");
+      // ✅ Clear fields
       setUsername("");
       setPassword("");
+
+      // ✅ Redirect with success message and photo
+      navigate("/login", {
+        state: {
+          successMessage: "✅ Registered successfully! You can now login.",
+          photo: data.photo, // server should return photo
+        },
+      });
     } catch (err) {
       console.error(err);
       setMessage(`❌ ${err.message}`);
@@ -40,7 +52,7 @@ const Register = () => {
     <DefaultLayout hideWelcome={true}>
       <div className="register-wrapper">
         <form className="register-form" onSubmit={handleRegister}>
-          <h2 className="register-title">Create Account</h2>  {/* 🔹 moved inside */}
+          <h2 className="register-title">Create Account</h2>
           <input
             type="text"
             value={username}
