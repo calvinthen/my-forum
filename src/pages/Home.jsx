@@ -84,13 +84,11 @@ const Home = () => {
               <div key={post.id} className="post-card">
                 <div className="post-header">
                   <img
-                    src={post.photo || "https://via.placeholder.com/50"}
+                    src={post.photo || "https://via.placeholder.com/60"}
                     alt="profile"
-                    className="post-photo"
+                    className="post-profile-pic"
                   />
-                  <div className="post-user">
-                    <h4 className="post-username">{post.username}</h4>
-                  </div>
+                  <h4 className="post-username">{post.username}</h4>
                 </div>
                 <p className="post-content">{post.content}</p>
               </div>
