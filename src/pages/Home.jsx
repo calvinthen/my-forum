@@ -3,6 +3,8 @@ import DefaultLayout from '../layouts/DefaultLayout'
 import './Home.css' // custom styles
 
 const Home = () => {
+  const storedUser = localStorage.getItem('user');
+  const user = storedUser ? JSON.parse(storedUser) : null;
   const [text, setText] = useState("")
   const [posts, setPosts] = useState([])   // store all posts
   const [loading, setLoading] = useState(false)
@@ -53,20 +55,24 @@ const Home = () => {
   return (
     <DefaultLayout>
       <div className="home-wrapper">
+        
+        {/* Centered input + button (only show if logged in) */}
+        {user && (
+          <div className="form-container">
+            <input
+              type="text"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="What is on your mind?"
+              className="text-input"
+            />
+            <button onClick={handleSubmit} className="submit-btn" disabled={loading}>
+              {loading ? "Posting..." : "Post"}
+            </button>
+          </div>
+        )}
 
-        {/* Centered input + button */}
-        <div className="form-container">
-          <input
-            type="text"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="What is on your mind?"
-            className="text-input"
-          />
-          <button onClick={handleSubmit} className="submit-btn" disabled={loading}>
-            {loading ? "Posting..." : "Post"}
-          </button>
-        </div>
+
 
         {/* 🔹 Show all posts */}
         <div className="posts-list">
