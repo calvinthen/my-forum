@@ -17,11 +17,6 @@ const db = new sqlite3.Database("./mydb.sqlite", (err) => {
 });
 
 // create tables if not exists
-db.run(`CREATE TABLE IF NOT EXISTS posts_status (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  content TEXT
-)`);
-
 db.run(`CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT UNIQUE,
@@ -29,20 +24,39 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
   photo TEXT DEFAULT 'https://cdn.shopify.com/s/files/1/0747/5317/9944/files/furina_901c3b85-7c17-44c9-bcea-a7e434d864b5_600x600.jpg?v=1718073582'
 )`);
 
+db.run(`CREATE TABLE IF NOT EXISTS posts_status (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  content TEXT,
+  user_id INTEGER,
+  FOREIGN KEY(user_id) REFERENCES users(id)
+)`);
+
+
 // Add a post status
 app.post("/posts-status", (req, res) => {
-  const { content } = req.body;
-  if (!content) return res.status(400).json({ error: "Content required" });
+  const { content, user_id } = req.body;
+  if (!content || !user_id) return res.status(400).json({ error: "Content and user required" });
 
-  db.run(`INSERT INTO posts_status (content) VALUES (?)`, [content], function (err) {
-    if (err) res.status(400).json({ error: err.message });
-    else res.json({ id: this.lastID, content });
-  });
+  db.run(
+    `INSERT INTO posts_status (content, user_id) VALUES (?, ?)`,
+    [content, user_id],
+    function (err) {
+      if (err) return res.status(400).json({ error: err.message });
+      res.json({ id: this.lastID, content, user_id });
+    }
+  );
 });
 
 // ✅ Get all posts
 app.get("/posts-status", (req, res) => {
-  db.all("SELECT * FROM posts_status ORDER BY id ASC", [], (err, rows) => {
+  const query = `
+    SELECT posts_status.id, posts_status.content, users.username, users.photo
+    FROM posts_status
+    JOIN users ON posts_status.user_id = users.id
+    ORDER BY posts_status.id DESC
+  `;
+
+  db.all(query, [], (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(rows);
   });
@@ -104,12 +118,34 @@ app.post("/login", (req, res) => {
       const match = await bcrypt.compare(password, user.password);
       if (!match) return res.status(400).json({ error: "Invalid username or password" });
 
-      res.json({ message: "Login successful", username: user.username, photo: user.photo });
+      res.json({ 
+        message: "Login successful", 
+        id: user.id,  
+        username: user.username, 
+        photo: user.photo 
+      });
+
     } catch {
       res.status(500).json({ error: "Server error" });
     }
   });
 });
+
+
+//DELETE TABLES - for testing purposes only
+
+// ⚠️ Drop table ONCE posts_status
+// db.run(`DROP TABLE posts_status`, (err) => {
+//   if (err) console.error("❌ Error dropping table:", err.message);
+//   else console.log("✅ posts_status table dropped");
+// });
+
+// ⚠️ Drop table ONCE users
+// db.run(`DROP TABLE users`, (err) => {
+//   if (err) console.error("❌ Error dropping table:", err.message);
+//   else console.log("✅ posts_status table dropped");
+// });
+
 
 // Start server
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));

@@ -28,29 +28,30 @@ const Home = () => {
 
 
   const handleSubmit = async () => {
-    if (!text.trim()) return
+    if (!text.trim()) return;
+    if (!user) return alert("You must be logged in to post.");
 
-    setLoading(true)
+    setLoading(true);
     try {
-      // fetch to backend API (example: http://localhost:5000/posts-status)
       const res = await fetch("http://localhost:5000/posts-status", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: text }),
-      })
+        body: JSON.stringify({ content: text, user_id: user.id }), // ✅ send user_id
+      });
 
-      if (!res.ok) throw new Error("Failed to save post")
+      if (!res.ok) throw new Error("Failed to save post");
 
-      const data = await res.json()
-      setPosts([data, ...posts])// server response
-      setText("")
+      const data = await res.json();
+      setPosts([data, ...posts]); // update post list
+      setText("");
     } catch (err) {
-      console.error(err)
-      alert("Error saving post")
+      console.error(err);
+      alert("Error saving post");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
+
 
   return (
     <DefaultLayout>
@@ -80,8 +81,18 @@ const Home = () => {
             <p>No posts yet.</p>
           ) : (
             posts.map((post) => (
-              <div key={post.id} className="post-item">
-                ID = {post.id} - Said: {post.content}
+              <div key={post.id} className="post-card">
+                <div className="post-header">
+                  <img
+                    src={post.photo || "https://via.placeholder.com/50"}
+                    alt="profile"
+                    className="post-photo"
+                  />
+                  <div className="post-user">
+                    <h4 className="post-username">{post.username}</h4>
+                  </div>
+                </div>
+                <p className="post-content">{post.content}</p>
               </div>
             ))
           )}

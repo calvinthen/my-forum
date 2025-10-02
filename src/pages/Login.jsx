@@ -26,10 +26,12 @@ const Login = () => {
       if (!res.ok) throw new Error(data.error || "Login failed");
 
       // inside handleLogin success
-      localStorage.setItem("user", JSON.stringify({ 
+      localStorage.setItem("user", JSON.stringify({
+        id: data.id, 
         username: data.username, 
-        photo: data.photo   // ✅ save photo
+        photo: data.photo
       }));
+
       
       navigate("/"); // redirect home
     } catch (err) {

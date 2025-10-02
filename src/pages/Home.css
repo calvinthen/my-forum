@@ -18,6 +18,7 @@
   align-items: center;
   width: 100%;
   max-width: 400px;
+  margin-bottom: 2rem;  /* 🔹 Added space below the form */
 }
 
 .text-input {
@@ -36,7 +37,7 @@
 }
 
 .submit-btn {
-  width: 80%; /* same width as input */
+  width: 80%;
   padding: 9px;
   font-size: 16px;
   background-color: #4f46e5;
@@ -55,4 +56,80 @@
   margin-top: 15px;
   font-size: 16px;
   color: #ffffff;
+}
+
+.posts-list {
+  margin-top: 1rem;       /* spacing above post list */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;              /* 🔹 increase space between post cards */
+  width: 100%;
+}
+
+.post-card {
+  background: #1e1e2f;
+  color: #f5f5f5;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  width: 40%;
+  min-width: 320px;
+  margin-bottom: 2rem;   /* space between cards */
+}
+
+.posts-container {
+  margin-top: 2rem;              /* space above posts */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;                     /* consistent space between each post card */
+  width: 100%;
+}
+
+/* flex row for profile + username */
+.post-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.post-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.post-photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 1rem;
+}
+
+.post-content {
+  font-size: 1rem;
+  color: #ddd;
+  margin-top: 0.5rem;
+}
+
+.post-user {
+  display: flex;
+  flex-direction: column;
+}
+
+.post-username {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+
+.post-text {
+  margin: 0.3rem 0 0;
+  color: #e4e4e7;
+  word-break: break-word;
 }
